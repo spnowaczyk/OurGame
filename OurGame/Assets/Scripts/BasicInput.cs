@@ -1,58 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
-using UnityEngine;
-
-public class BasicInput : MonoBehaviour
+namespace OurGame
 {
-    void addPositionOnWSAD()
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using UnityEditor;
+    using UnityEngine;
+
+    public class BasicInput : MonoBehaviour
     {
-        this.transform.position = new Vector3(x, y, z);
-        positions.Insert(0, this.transform.position);
-    }
+        [SerializeField] private float speed = 2.0f;
+        [SerializeField] private List<Vector3> positions;
+
+        public Vector3 GetPosition(int index)
+        {
+            return positions[index];
+        }
     
-    private float x;
-    private float y;
-    private float z;
-
-    public List<Vector3> positions;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    x = this.transform.position.x;
-    y = this.transform.position.y;
-    z = this.transform.position.z;
-
-    for (float i = 10; i > 0; i -= 0.02f)
+        // Start is called before the first frame upddate
+        private void Start()
         {
-            positions.Insert(0, new Vector3(transform.position.x, this.transform.position.y, x - i));
+            for (float i = 10; i > 0; i -= 0.02f)
+            {
+                positions.Insert(0, new Vector3(transform.position.x, transform.position.y, transform.position.x - i));
+            }
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKey(KeyCode.W))
+        private void AddPositionOnWSAD(Vector3 inputVector)
         {
-            z += 0.02f;
-            addPositionOnWSAD();
+            this.transform.position += inputVector * speed * Time.deltaTime;
+            positions.Insert(0, this.transform.position);
         }
-        if (Input.GetKey(KeyCode.A))
+
+        // Update is called once per frame
+        private void Update()
         {
-            x -= 0.02f;
-            addPositionOnWSAD();
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            z -= 0.02f;
-            addPositionOnWSAD();
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            x += 0.02f;
-            addPositionOnWSAD();
+            var inputVector = Vector3.zero;
+
+            if (Input.GetKey(KeyCode.W))
+                inputVector.z += 1f;
+            if (Input.GetKey(KeyCode.S))
+                inputVector.z -= 1f;
+            if (Input.GetKey(KeyCode.A))
+                inputVector.x -= 1f;
+            if (Input.GetKey(KeyCode.D))
+                inputVector.x += 1f;
+
+            inputVector = inputVector.normalized;
+
+            AddPositionOnWSAD(inputVector);
         }
     }
 }
+

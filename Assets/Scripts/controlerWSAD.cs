@@ -1,35 +1,32 @@
-using UnityEngine;
-
-public class controlerWSAD : MonoBehaviour
+namespace OurGame
 {
-    private Rigidbody _rigidbody;
-
-    public float thrust;
-    // Start is called before the first frame update
-    void Start()
+    using UnityEngine;
+    public class controlerWSAD : MonoBehaviour
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        var inputVector = Vector3.zero;
-
-        if (Input.GetKey(KeyCode.W))
-            inputVector.z += 10f;
-        if (Input.GetKey(KeyCode.S))
-            inputVector.z -= 10f;
-        if (Input.GetKey(KeyCode.A))
-            inputVector.x -= 10f;
-        if (Input.GetKey(KeyCode.D))
-            inputVector.x += 10f;
-
-        inputVector = inputVector.normalized;
-
-        thrust = inputVector.x + inputVector.y + inputVector.z;
+        [SerializeField] private float snakeSpeed;
         
-        _rigidbody.AddForce(inputVector);
-        _rigidbody.velocity = _rigidbody.velocity - _rigidbody.velocity * 0.9f * Time.deltaTime;
+        private Rigidbody _rigidbody;
+        void Start()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+        }
+        
+        void Update()
+        {
+            var inputVector = Vector3.zero;
+
+            if (Input.GetKey(KeyCode.W))
+                inputVector.z += 1f;
+            if (Input.GetKey(KeyCode.S))
+                inputVector.z -= 1f;
+            if (Input.GetKey(KeyCode.A))
+                inputVector.x -= 1f;
+            if (Input.GetKey(KeyCode.D))
+                inputVector.x += 1f;
+
+            inputVector = inputVector.normalized;
+
+            transform.position += inputVector * Time.deltaTime * snakeSpeed;
+        }
     }
 }

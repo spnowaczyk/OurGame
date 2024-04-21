@@ -1,12 +1,17 @@
-using UnityEngine;
-
-public class DestroyOnCollision : MonoBehaviour
+namespace OurGame
 {
-    private void OnTriggerEnter(Collider other)
+    using UnityEngine;
+    public class DestroyOnCollision : MonoBehaviour
     {
-        if (other.tag == "Player")
+        private const string Player = "Player";
+
+        private void OnTriggerEnter(Collider other)
         {
-            Destroy(this.gameObject);
+            if (other.CompareTag(Player))
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
+

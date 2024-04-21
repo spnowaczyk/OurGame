@@ -1,27 +1,36 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 
-public class Chain : MonoBehaviour
+namespace OurGame
 {
-    [SerializeField] private GameObject objectToFollow;
-    
-    private Vector3 objectToFollowPosition;
-    private Rigidbody _rigidbody;
-    
-    // Start is called before the first frame update
-    void Start()
+    public class Chain : MonoBehaviour
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
+        [SerializeField] private GameObject objectToFollow;
+        [SerializeField] private float distance = 2f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        objectToFollowPosition = objectToFollow.GetComponent<Transform>().position;
-
-        if ((objectToFollowPosition - transform.position).magnitude > 2f)
+        private new Rigidbody rigidbody;
+        
+        private void Start()
         {
-            _rigidbody.AddForce((objectToFollowPosition - transform.position) * Time.deltaTime * 600f);
+            rigidbody = GetComponent<Rigidbody>();
         }
-        _rigidbody.velocity = _rigidbody.velocity - _rigidbody.velocity * 0.9f * Time.deltaTime;
+
+        private void Update()
+        {
+            Vector3 vectorBetweenObjects = objectToFollow.transform.position - transform.position;
+            float magnitude = vectorBetweenObjects.magnitude;
+            if (magnitude > distance)
+                transform.position += vectorBetweenObjects.normalized * (magnitude - distance);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (objectToFollow != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, objectToFollow.transform.position);
+            }
+        }
     }
 }
